@@ -392,8 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Límite superior: tabs
         const minY = tabsHeight;
-        // Límite inferior: borde del contenedor (videos llegan hasta abajo del todo)
-        const maxY = containerHeight + navHeight;
+        // Límite inferior: borde inferior del contenedor menos la navegación
+        const maxY = containerHeight - navHeight;
 
         // Verificar colisiones entre videos
         checkVideoCollisions();
@@ -433,11 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 video.vx = -Math.abs(video.vx);
                 flashVideo(videoEl);
             }
+            // Rebote superior (tabs)
             if (video.y <= minY) {
                 video.y = minY;
                 video.vy = Math.abs(video.vy);
                 flashVideo(videoEl);
             }
+            // Rebote inferior (navegación)
             if (video.y + videoHeight >= maxY) {
                 video.y = maxY - videoHeight;
                 video.vy = -Math.abs(video.vy);
@@ -450,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Continuar animación
-        dvdAnimationId = requestAnimationFrame(() => animateDVDVideos(containerWidth, maxY));
+        dvdAnimationId = requestAnimationFrame(() => animateDVDVideos(containerWidth, containerHeight));
     }
     
     function checkVideoCollisions() {
